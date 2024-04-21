@@ -3,9 +3,10 @@ from arch_flow.implementations.DirectoryExplorerImplementation import DirectoryE
 
 
 class DirectoryExplorer:
-    def __init__(self, directory=None):
+    def __init__(self, directory=None, directory_template=None):
         self.implementation = DirectoryExplorerImplementation()
         self.directory = directory
+        self.directory_template = directory_template
         if directory is None:
             self.directory = os.getcwd()
 
@@ -47,7 +48,7 @@ class DirectoryExplorer:
         return self.implementation.return_root_path(self.directory)
 
     def read_file_template(self, path_relative, required=False):
-        return self.implementation.read_file_template(path_relative, required)
+        return self.implementation.read_file_template(path_relative,self.directory_template, required)
 
     def change_folder_partial_match(self, partial_name, folder_to_ignore=None):
         return self.implementation.change_folder_partial_match(partial_name, os.getcwd(), folder_to_ignore)

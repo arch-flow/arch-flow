@@ -20,10 +20,6 @@ class ArchFlow(ABC):
         self.root_path = os.getcwd()
 
     @abstractmethod
-    def create_project(self, *args):
-        pass
-
-    @abstractmethod
     def functions_flow(self):
         pass
 
@@ -84,7 +80,7 @@ class ArchFlow(ABC):
         dictionary_string_manipulator = self.StringManipulator.dictionary_of_standard_functions()
         dictionary_output_handler = self.OutputHandler.dictionary_of_standard_functions()
         functions_flow = self.functions_flow()
-        return {'create_project': self.create_project,
+        return {
                 'functions_flow': functions_flow,
                 'directory_creator': dictionary_directory_creator,
                 'directory_explorer': dictionary_directory_explorer,

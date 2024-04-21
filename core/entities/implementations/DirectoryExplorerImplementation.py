@@ -1,11 +1,8 @@
-import json
 import os
-from arch_flow.exceptions.NotFoundException import NotFoundException
-from arch_flow.utils.DirectoryExplorerUtil import DirectoryExplorerUtil
-from arch_flow.output.OutputHandler import OutputHandler
+from core.entities.exceptions.NotFoundException import NotFoundException
+from core.entities.utils.DirectoryExplorerUtil import DirectoryExplorerUtil
 
 util = DirectoryExplorerUtil
-outuput = OutputHandler()
 
 
 class DirectoryExplorerImplementation:
@@ -43,7 +40,7 @@ class DirectoryExplorerImplementation:
         return folders
 
     @staticmethod
-    def find_only_one_file(directory, file):
+    def find_only_file(directory, file):
         files = DirectoryExplorerImplementation.list_files(directory, file)
         qtde_files = len(files) if files is not None else 0
         if qtde_files == 0:
@@ -58,7 +55,7 @@ class DirectoryExplorerImplementation:
         return files
 
     @staticmethod
-    def find_only_one_folder(directory, folder):
+    def find_only_folder(directory, folder):
         folders = DirectoryExplorerImplementation.list_folders(directory, folder)
         qtde_folders = len(folders) if folders is not None else 0
         if qtde_folders == 0:
@@ -94,51 +91,3 @@ class DirectoryExplorerImplementation:
             return NotFoundException.not_found_error(f"File not found: {file_path}")
         except Exception as e:
             return NotFoundException.fatal_not_found_error(f"Error reading file:{file_path} \nerror {str(e)}")
-
-    @staticmethod
-    def change_folder(path_folder, path_root):
-        try:
-            new_path_root = os.path.join(path_root, path_folder)
-            os.chdir(new_path_root)
-            outuput.information_message(f"Temporarily moved to folder: {new_path_root}")
-
-        except FileNotFoundError:
-            NotFoundException.not_found_error(f"folder not found: {path_folder}")
-        except PermissionError:
-            outuput.alert_message(f"permission denied to access folder: {path_folder}")
-
-    def change_folder_partial_match(self, partial_name, path_root, folder_to_ignore=None):
-        try:
-            folders = self.list_folders(path_root)
-            if folder_to_ignore:
-                folders = util.filter_entities_by_name(folders, folder_to_ignore)
-            for folder_name in folders:
-                if partial_name.lower() in folder_name.lower() and os.path.isdir(os.path.join(path_root, folder_name)):
-                    new_path_root = os.path.join(path_root, folder_name)
-                    os.chdir(new_path_root)
-                    outuput.information_message(f"Temporarily moved to folder: {new_path_root}")
-                    return
-
-            NotFoundException.not_found_error(f"Folder with partial name '{partial_name}' not found in {path_root}")
-        except PermissionError:
-            NotFoundException.fatal_not_found_error(f"Permission denied to access folder: {path_root}")
-
-    @staticmethod
-    def return_root_path(path_root):
-        os.chdir(path_root)
-        outuput.information_message(f"Returned to the original folder: {path_root}")
-
-    def read_file_template(self, name_template, directory_template, required=False):
-        file = self.find_only_one_file(directory_template, name_template)
-        if file:
-            return self.read_file(file[0], required)
-        return ""
-
-    @staticmethod
-    def read_json_file(root_path_json):
-        try:
-            with open(root_path_json, 'r') as file_json:
-                content = json.load(file_json)
-        except Exception as e:
-            outuput.alert_message(f"Error reading file {root_path_json} error: {e}")
-        return content
