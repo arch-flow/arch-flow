@@ -1,7 +1,8 @@
 # 🤖 arch-flow
-Bem-vindo ao repositório do _Arch-flow_! O Arch é uma plataforma de código aberto projetada para 
-facilitar o desenvolvimento de automações, simplificando tarefas como manipulação de strings, 
-criação de diretórios, arquivos e muito mais
+Bem vindo ao repositório do ArchFlow! O ArchFlow é uma biblioteca em python, open source, 
+projetada para habilitar a automação da geração de arquivos e diretórios dinâmicos, a fim
+de compor arquiteturas robustas de forma declarativa, abstraindo o trabalho manual que 
+seria necessário sem ela.
 <br><br>
 
 ### 🧑🏽‍💻 Instalação:
@@ -13,9 +14,8 @@ pip install arch_flow
 
 ### 🧩 O conceito do Arch Flow
 
-Peças de Lego representam bem a essência do ArchFlow, onde cada peça representa uma função e 
-essas funções podem se conectar entre si, mesmo que, em termos de existência e implementação,
-elas sejam independentes.
+As funções que compõem o ArchFlow são como peças de lego: elas podem ser combinadas de 
+várias formas, resultando inúmeras composições possíveis.
 
 Por exemplo, digamos que você gostaria de criar um novo arquivo, você poderia simplesmente 
 criar algo parecido com isso:
