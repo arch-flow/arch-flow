@@ -20,11 +20,10 @@ class ArchFlow(ABC):
         self.root_path = os.getcwd()
 
     @abstractmethod
-    def functions_flow(self):
+    def functions_flow(self) -> dict:
         pass
 
     def create_file_based_in_template(self, file_destination, file_name, template_file_name, args=None):
-        file_destination = file_destination
         content = self.DirectoryExplorer.read_file_template(template_file_name)
         if args:
             content = self.StringManipulator.replace_args(content, args)
@@ -38,7 +37,7 @@ class ArchFlow(ABC):
 
     def handler_input(self, args, json_content):
         if len(args) == 0:
-            self.OutputHandler.success_message("Whoopsie-daisy! It seems like you forgot to provide a function. "
+            self.OutputHandler.information_message("Whoopsie-daisy! It seems like you forgot to provide a function. "
                                                "How about trying --help for some magic commands?")
             return None
         name_function = args[0]
@@ -60,7 +59,7 @@ class ArchFlow(ABC):
                     function = filter.find_key_in_dictionaries(functions_json, step)
                     steps_functions = filter.find_key_in_dictionaries(function, 'steps')
                     args_function_ = filter.find_key_in_dictionaries(dic, step)
-                    args_mapped = filter.map_args(args_function_, args[0:], "tem[")
+                    args_mapped = filter.map_args(args_function_, args[0:], "args[")
                     self.execute_step(steps_functions, args_mapped, dictonary_functions, functions_json)
                     break
                 try:
