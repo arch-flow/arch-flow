@@ -6,7 +6,7 @@ from arch_flow.utils.Filter import Filter
 from arch_flow.output.OutputHandler import OutputHandler
 import sys
 import os
-
+import json
 
 filter = Filter()
 
@@ -33,6 +33,23 @@ class ArchFlow(ABC):
     @staticmethod
     def handle_args():
         return sys.argv[1:]
+
+    def handler_functions_flow(self, args, json_functions=None):
+        combined_json_content = {}
+
+        for json_root_path in json_functions:
+            json_data = self.DirectoryExplorer.read_json_file(json_root_path)
+            for key, value in json_data.items():
+                if key in combined_json_content:
+                    # Gerencie conflitos de chaves aqui, por exemplo, transformando valores em listas
+                    if isinstance(combined_json_content[key], list):
+                        combined_json_content[key].append(value)
+                    else:
+                        combined_json_content[key] = [combined_json_content[key], value]
+                else:
+                    combined_json_content[key] = value
+
+        self.handler_input(args, combined_json_content)
 
     def handler_input(self, args, json_content):
         if len(args) == 0:
