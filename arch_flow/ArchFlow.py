@@ -32,9 +32,7 @@ class ArchFlow(ABC):
 
     @staticmethod
     def handle_args():
-        args_input = sys.argv[1:]
-        args_lower = [arg.lower() for arg in args_input]
-        return args_lower
+        return sys.argv[1:]
 
     def handler_input(self, args, json_content):
         if len(args) == 0:
