@@ -23,6 +23,7 @@ class OutputHandler(metaclass=SingletonMeta):
     messages = []
     def __init__(self):
         self.message_model = True
+        self.qtde_messages = 0
 
     @staticmethod
     def format_message(type_message, message, color_type=Fore.RED, identification=2):
@@ -84,8 +85,7 @@ class OutputHandler(metaclass=SingletonMeta):
     def message_yellow(message):
         console.print(f"[bold yellow]{message}[/bold yellow]")
 
-    @staticmethod
-    def update_content(live, messages):
+    def update_content(self, live, messages):
         terminal_size = shutil.get_terminal_size()
         table_width = terminal_size.columns
         max_message_length = max(len(message['message']) for message in messages)
@@ -98,7 +98,7 @@ class OutputHandler(metaclass=SingletonMeta):
         table.add_column("Step", justify="center", width=10)
 
         for step, message in enumerate(messages, start=1):
-            table.add_row(message['message'], message['status'], f"{step}/{len(messages)}")
+            table.add_row(message['message'], message['status'], f"{step}/{self.qtde_messages}")
 
         live.update(table)
 
