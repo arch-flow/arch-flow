@@ -41,14 +41,13 @@ class ArchFlow(ABC):
             json_data = self.DirectoryExplorer.read_json_file(json_root_path)
             for key, value in json_data.items():
                 if key in combined_json_content:
-                    # Gerencie conflitos de chaves aqui, por exemplo, transformando valores em listas
                     if isinstance(combined_json_content[key], list):
                         combined_json_content[key].append(value)
                     else:
                         combined_json_content[key] = [combined_json_content[key], value]
                 else:
                     combined_json_content[key] = value
-
+        self.handler_input_count(args, combined_json_content)
         self.handler_input(args, combined_json_content)
 
     def handler_input(self, args, json_content):
@@ -65,6 +64,28 @@ class ArchFlow(ABC):
             self.execute_step(steps_funcao, args, dictonary_functions, json_content)
         else:
             self.OutputHandler.alert_message(f"function '{name_function}' is not valid, try another one or try --help ")
+
+    def handler_input_count(self, args, json_content):
+        name_function = args[0]
+        func = filter.find_key_in_dictionaries(json_content, name_function)
+        if func is not None:
+            steps_funcao = filter.find_key_in_dictionaries(func, 'steps')
+            dictonary_functions = self.dictionary_of_standard_functions()
+            self.count_step(steps_funcao, args, dictonary_functions, json_content)
+
+    def count_step(self, steps_function, args, dictonary_functions, functions_json):
+        for dic in steps_function:
+            for step in dic:
+                args_function = filter.find_key_in_dictionaries(dic, step)
+                function = filter.find_key_in_dictionaries(dictonary_functions, step)
+                self.OutputHandler.qtde_messages +=1
+                if function is None:
+                    function = filter.find_key_in_dictionaries(functions_json, step)
+                    steps_functions = filter.find_key_in_dictionaries(function, 'steps')
+                    args_function_ = filter.find_key_in_dictionaries(dic, step)
+                    args_mapped = filter.map_args(args_function_, args[0:], "args[")
+                    self.count_step(steps_functions, args_mapped, dictonary_functions, functions_json)
+                    break
 
     def execute_step(self, steps_function, args, dictonary_functions, functions_json):
         for dic in steps_function:
