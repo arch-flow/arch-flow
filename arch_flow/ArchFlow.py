@@ -72,7 +72,9 @@ class ArchFlow(ABC):
             for step in dic:
                 args_function = filter.find_key_in_dictionaries(dic, step)
                 function = filter.find_key_in_dictionaries(dictonary_functions, step)
-                self.OutputHandler.messages_qtde += 1
+                new_step = {"message": step, "status": "info"}
+                self.OutputHandler.messages.append(new_step)
+
                 if function is None:
                     function = filter.find_key_in_dictionaries(functions_json, step)
                     steps_functions = filter.find_key_in_dictionaries(function, 'steps')
@@ -86,6 +88,7 @@ class ArchFlow(ABC):
             for step in dic:
                 args_function = filter.find_key_in_dictionaries(dic, step)
                 function = filter.find_key_in_dictionaries(dictonary_functions, step)
+                self.OutputHandler.messages_possition +=1
                 if function is None:
                     function = filter.find_key_in_dictionaries(functions_json, step)
                     steps_functions = filter.find_key_in_dictionaries(function, 'steps')

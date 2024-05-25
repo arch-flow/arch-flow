@@ -27,7 +27,7 @@ class OutputHandler(metaclass=SingletonMeta):
 
     def __init__(self):
         self.message_model = True
-        self.messages_qtde = 0
+        self.messages_possition = 0
 
     @staticmethod
     def format_message(type_message, message, color_type=Fore.RED, identification=2):
@@ -61,7 +61,7 @@ class OutputHandler(metaclass=SingletonMeta):
 
     def information_message(self, message):
         if self.message_model:
-            status = "infor"
+            status = "info"
             self.messages = self.generate_output(message, status, self.messages)
         else:
             print(OutputHandler.format_message("[information]", message, color_type=Fore.LIGHTBLACK_EX, identification=3))
@@ -102,14 +102,14 @@ class OutputHandler(metaclass=SingletonMeta):
         table.add_column("Step", justify="center", width=10)
 
         for step, message in enumerate(messages, start=1):
-            table.add_row(message['message'], message['status'], f"{step}/{self.messages_qtde}")
+            table.add_row(message['message'], message['status'], f"{step}/{len(messages)}")
 
         live.update(table)
 
     def generate_output(self, new_message, status, previous_messages):
         messages = previous_messages[:]
         new_message = {"message": new_message, "status": status}
-        messages.append(new_message)
+        messages[self.messages_possition-1] = new_message
         with Live(console=console, refresh_per_second=4) as live:
             self.clear_screen()
             self.update_content(live, messages)
