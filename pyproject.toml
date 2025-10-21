@@ -8,23 +8,19 @@ authors = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "alembic>=1.16.5",
-    "fastapi>=0.118.0",
-    "pydantic>=2.11.9",
-    "sqlalchemy>=2.0.43",
     "typer>=0.19.2",
-    "uvicorn>=0.37.0",
+    "rich>=14.2.0",
 ]
 
 [project.scripts]
-flow = "cli.main:app"
+flow = "apps.cli.main:main"
 
 [build-system]
 requires = ["hatchling>=1.24.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app", "cli"]
+packages = ["apps"]
 
 [dependency-groups]
 dev = [
