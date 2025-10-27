@@ -1,4 +1,3 @@
-# apps/cli/commands/doctor.py
 from typer import Typer
 from rich.console import Console
 

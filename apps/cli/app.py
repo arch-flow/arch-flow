@@ -15,7 +15,7 @@ def build_app(ctx_data: AppContext, help_renderer: HelpRenderer) -> typer.Typer:
     @app.callback(invoke_without_command=True)
     def root(
         ctx: typer.Context,
-        help_: bool = typer.Option(False, "--help", "-h", is_eager=True, help="Show this message and exit."),
+        help_: bool = typer.Option(False, "-help", "-h", is_eager=True, help="Show this message and exit."),
     ) -> None:
         ctx.obj = ctx_data
         if help_:

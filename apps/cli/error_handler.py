@@ -2,6 +2,11 @@ import click
 from .help_renderer import HelpRenderer
 
 
+def _extract_invalid_command(message: str) -> str:
+    parts = message.split("'")
+    return parts[1] if len(parts) > 1 else ""
+
+
 class CliErrorHandler:
     def __init__(self, help_renderer: HelpRenderer):
         self.help = help_renderer
@@ -13,7 +18,7 @@ class CliErrorHandler:
                 self.help.show_no_command()
                 return
             if "No such command" in text:
-                invalid = self._extract_invalid_command(text)
+                invalid = _extract_invalid_command(text)
                 self.help.show_unknown_command(invalid)
                 return
             self.help.show_invalid_usage(text)
@@ -25,7 +30,3 @@ class CliErrorHandler:
             self.help.show_interrupt()
             return
         self.help.show_unexpected(str(exc))
-
-    def _extract_invalid_command(self, message: str) -> str:
-        parts = message.split("'")
-        return parts[1] if len(parts) > 1 else ""
