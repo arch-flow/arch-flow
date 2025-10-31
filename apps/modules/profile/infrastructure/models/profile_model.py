@@ -18,11 +18,11 @@ class ProfileModel(Base):
 
     def to_entity(self) -> ProfileEntity:
         return ProfileEntity(
-            id=uuid.UUID(bytes=self.id),
-            name=self.name,
-            purpose=self.purpose,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
+            id=uuid.UUID(bytes=getattr(self, 'id')),
+            name=str(self.name),
+            purpose=str(self.purpose),
+            created_at=getattr(self, 'created_at'),
+            updated_at=getattr(self, 'updated_at'),
         )
 
     @classmethod
