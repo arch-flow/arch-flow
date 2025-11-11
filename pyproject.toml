@@ -6,6 +6,9 @@ readme = "README.md"
 authors = [
     { name = "ViniciusInTech", email = "vini989073599@gmail.com" }
 ]
+[tool.isort]
+profile = "black"
+line_length = 88
 requires-python = ">=3.12.3"
 dependencies = [
     "typer>=0.19.2",

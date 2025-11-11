@@ -3,7 +3,6 @@ alembic==1.17.0
 annotated-doc==0.0.3
 annotated-types==0.7.0
 anyio==4.11.0
--e git+ssh://git@github.com/arch-flow/arch-flow.git@1d593c16613937a1e02c6064bf444a4e47633727#egg=archflow
 certifi==2025.8.3
 click==8.3.0
 fastapi==0.120.0

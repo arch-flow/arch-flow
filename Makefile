@@ -6,13 +6,13 @@ PIP := $(VENV_BIN)/pip
 .PHONY: install
 install:
 	@echo "-> Instalando dependências do projeto..."
-	$(PIP) install -r requirements.txt
+	uv install -r requirements.txt
 	@echo "-> Instalação concluída."
 
 .PHONY: requirements
 requirements:
 	@echo "-> Gerando arquivo requirements.txt com dependências atuais..."
-	$(PYTHON) -m pip freeze > requirements.txt
+	uv pip install -r requirements.txt
 	@echo "-> Arquivo requirements.txt atualizado com sucesso."
 
 .PHONY: migrate-new
@@ -37,11 +37,18 @@ migrate-down:
 	$(ALEMBIC) downgrade -1
 	@echo "-> Downgrade concluído."
 
+.PHONY: create-module
+create-module:
+	@echo "-> Criando estrutura de módulo para '$(NAME)'..."
+	python scripts/create_module_structure.py $(NAME)
+
+
 .PHONY: help
 help:
 	@echo "Comandos Makefile disponíveis:"
 	@echo "  install              - Instala as dependências do projeto via requirements.txt."
 	@echo "  requirements         - Gera/atualiza o requirements.txt com os pacotes atuais do .venv."
-	@echo "  migrate-new NAME='' - Cria um novo script de migração com o nome informado."
+	@echo "  migrate-new NAME=''  - Cria um novo script de migração com o nome informado."
 	@echo "  migrate-up           - Aplica todas as migrações pendentes no banco de dados."
 	@echo "  migrate-down         - Desfaz a última migração aplicada (downgrade -1)."
+	@echo "  create-module NAME='' - Cria a estrutura inicial de um novo módulo (ex: make create-module NAME=FlowStep)"
