@@ -1,7 +1,11 @@
-import subprocess
+import logging
 import shutil
+import subprocess
 from pathlib import Path
 from uuid import UUID
+
+logger = logging.getLogger('venv-service')
+
 
 class VenvEnvironmentService:
     @staticmethod
@@ -23,8 +27,16 @@ class VenvEnvironmentService:
                 timeout=60
             )
         except subprocess.TimeoutExpired:
+            logger.error("Timeout while creating virtual environment at %s", base_path)
             raise TimeoutError("Virtual environment creation timed out after 60 seconds via uv.")
         except subprocess.CalledProcessError as e:
+            logger.error(
+                "Failed to create virtual environment. Command: %s | Exit Code: %s | STDOUT: %s | STDERR: %s",
+                " ".join(e.cmd),
+                e.returncode,
+                e.stdout,
+                e.stderr
+            )
             raise RuntimeError(
                 f"Failed to create virtual environment using uv:\n"
                 f"Command: {' '.join(e.cmd)}\n"
@@ -33,7 +45,7 @@ class VenvEnvironmentService:
                 f"STDERR: {e.stderr}"
             ) from e
 
-        print(f"[✓] Virtual environment created at {base_path} using uv")
+        logger.info("Virtual environment created at %s using uv", base_path)
 
     @staticmethod
     def delete(profile_id: UUID, name: str) -> None:
@@ -46,6 +58,30 @@ class VenvEnvironmentService:
         try:
             shutil.rmtree(base_path)
         except Exception as e:
+            logger.error("Failed to delete virtual environment at %s: %s", base_path, e)
             raise RuntimeError(f"Failed to delete virtual environment at {base_path}: {e}")
 
-        print(f"[✓] Virtual environment deleted from {base_path}")
+        logger.info("Virtual environment deleted from %s", base_path)
+
+    @staticmethod
+    def rename(profile_id: UUID, old_name: str, new_name: str) -> None:
+        old_safe_name = old_name.replace(" ", "_").lower()
+        new_safe_name = new_name.replace(" ", "_").lower()
+
+        base_path = Path("data/profiles") / str(profile_id)
+        old_path = base_path / old_safe_name
+        new_path = base_path / new_safe_name
+
+        if not old_path.exists() or not old_path.is_dir():
+            raise FileNotFoundError(f"Virtual environment not found at {old_path}")
+
+        if new_path.exists():
+            raise FileExistsError(f"A virtual environment with the name '{new_safe_name}' already exists at {new_path}")
+
+        try:
+            old_path.rename(new_path)
+        except Exception as e:
+            logger.error("Failed to rename virtual environment from %s to %s: %s", old_path, new_path, e)
+            raise RuntimeError(f"Failed to rename virtual environment from {old_path} to {new_path}: {e}")
+
+        logger.info("Virtual environment renamed from %s to %s", old_safe_name, new_safe_name)

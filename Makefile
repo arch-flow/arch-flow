@@ -46,9 +46,9 @@ create-module:
 .PHONY: help
 help:
 	@echo "Comandos Makefile disponíveis:"
-	@echo "  install              - Instala as dependências do projeto via requirements.txt."
-	@echo "  requirements         - Gera/atualiza o requirements.txt com os pacotes atuais do .venv."
-	@echo "  migrate-new NAME=''  - Cria um novo script de migração com o nome informado."
-	@echo "  migrate-up           - Aplica todas as migrações pendentes no banco de dados."
-	@echo "  migrate-down         - Desfaz a última migração aplicada (downgrade -1)."
-	@echo "  create-module NAME='' - Cria a estrutura inicial de um novo módulo (ex: make create-module NAME=FlowStep)"
+	@echo "  install                 - Instala as dependências do projeto via requirements.txt."
+	@echo "  requirements            - Gera/atualiza o requirements.txt com os pacotes atuais do .venv."
+	@echo "  migrate-new NAME=''     - Cria um novo script de migração com o nome informado."
+	@echo "  migrate-up              - Aplica todas as migrações pendentes no banco de dados."
+	@echo "  migrate-down            - Desfaz a última migração aplicada (downgrade -1)."
+	@echo "  create-module NAME=''   - Cria a estrutura inicial de um novo módulo (ex: make create-module NAME=FlowStep)"
