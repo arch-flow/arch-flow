@@ -4,13 +4,18 @@ from pydantic_settings import BaseSettings
 
 
 class AppConfig(BaseSettings):
-    app_name: str = "Arch Flow API"
-    version: str = "0.1.0"
-    environment: str = "development"
+    APP_NAME: str
+    VERSION: str
+    ENVIRONMENT: str
+    USE_POSTGRES: bool
+
+    POSTGRES_URL: str
+    SQLITE_URL: str = "sqlite+pysqlite:///./data/db/archflow.db"
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+
 
 @lru_cache
 def get_config() -> AppConfig:

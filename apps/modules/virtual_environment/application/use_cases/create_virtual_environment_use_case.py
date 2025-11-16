@@ -1,24 +1,26 @@
-from uuid import uuid4
 from datetime import datetime, timezone
+from uuid import uuid4
+
+from apps.modules.profile.domain.repositories.profile_repository_interface import ProfileRepositoryInterface
 from apps.modules.virtual_environment.application.dto.create_virtual_environment_dto import CreateVirtualEnvironmentDTO
 from apps.modules.virtual_environment.domain.entities.virtual_environment_entity import VirtualEnvironmentEntity
-from apps.modules.virtual_environment.domain.repositories.virtual_environment_repository_interface import VirtualEnvironmentRepositoryInterface
-from apps.modules.profile.domain.repositories.profile_repository_interface import ProfileRepositoryInterface
+from apps.modules.virtual_environment.domain.repositories.virtual_environment_repository_interface import \
+    VirtualEnvironmentRepositoryInterface
 from apps.modules.virtual_environment.services.venv_environment_service import VenvEnvironmentService
 from apps.shared.exceptions.entity_not_found_exception import EntityNotFoundException
 
 
 class CreateVirtualEnvironmentUseCase:
     def __init__(
-        self,
-        repository: VirtualEnvironmentRepositoryInterface,
-        profile_repository: ProfileRepositoryInterface,
+            self,
+            repository: VirtualEnvironmentRepositoryInterface,
+            profile_repository: ProfileRepositoryInterface,
     ):
         self.repository = repository
         self.profile_repository = profile_repository
         self.environment_creator = VenvEnvironmentService()
 
-    def execute(self, data: CreateVirtualEnvironmentDTO) -> None:
+    def execute(self, data: CreateVirtualEnvironmentDTO) -> VirtualEnvironmentEntity:
         if not self.profile_repository.get_by_id(data.profile_id):
             raise EntityNotFoundException("Profile")
 
@@ -40,3 +42,4 @@ class CreateVirtualEnvironmentUseCase:
         )
 
         self.repository.create(environment)
+        return environment

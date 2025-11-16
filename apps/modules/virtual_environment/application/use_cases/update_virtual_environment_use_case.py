@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from uuid import UUID
 
 from apps.modules.virtual_environment.application.dto.update_virtual_environment_dto import UpdateVirtualEnvironmentDTO
+from apps.modules.virtual_environment.domain.entities.virtual_environment_entity import VirtualEnvironmentEntity
 from apps.modules.virtual_environment.domain.repositories.virtual_environment_repository_interface import \
     VirtualEnvironmentRepositoryInterface
 from apps.modules.virtual_environment.services.venv_environment_service import VenvEnvironmentService
@@ -14,7 +15,7 @@ class UpdateVirtualEnvironmentUseCase:
         self.repository = repository
         self.environment_service = VenvEnvironmentService()
 
-    def execute(self, environment_id: UUID, data: UpdateVirtualEnvironmentDTO) -> None:
+    def execute(self, environment_id: UUID, data: UpdateVirtualEnvironmentDTO) -> VirtualEnvironmentEntity:
         environment = self.repository.get_by_id(environment_id)
 
         if not environment:
@@ -33,3 +34,4 @@ class UpdateVirtualEnvironmentUseCase:
         )
 
         self.repository.update(updated_environment)
+        return environment

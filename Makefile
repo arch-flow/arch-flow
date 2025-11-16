@@ -3,6 +3,25 @@ PYTHON := $(VENV_BIN)/python
 ALEMBIC := $(VENV_BIN)/alembic
 PIP := $(VENV_BIN)/pip
 
+
+.PHONY: db-up
+db-up:
+	@echo "-> Subindo PostgreSQL genérico (usuário: dev, senha: dev)..."
+	docker-compose up -d
+	@echo "-> PostgreSQL iniciado na porta 5432."
+
+.PHONY: db-down
+db-down:
+	@echo "-> Finalizando PostgreSQL..."
+	docker-compose down
+	@echo "-> PostgreSQL encerrado."
+
+.PHONY: db-create
+db-create:
+	@echo "-> Criando banco '$(DB)' no PostgreSQL..."
+	docker exec -i local_postgres psql -U dev -c "CREATE DATABASE $(DB);"
+	@echo "-> Banco '$(DB)' criado com sucesso."
+
 .PHONY: install
 install:
 	@echo "-> Instalando dependências do projeto..."
@@ -46,9 +65,12 @@ create-module:
 .PHONY: help
 help:
 	@echo "Comandos Makefile disponíveis:"
-	@echo "  install                 - Instala as dependências do projeto via requirements.txt."
-	@echo "  requirements            - Gera/atualiza o requirements.txt com os pacotes atuais do .venv."
-	@echo "  migrate-new NAME=''     - Cria um novo script de migração com o nome informado."
-	@echo "  migrate-up              - Aplica todas as migrações pendentes no banco de dados."
-	@echo "  migrate-down            - Desfaz a última migração aplicada (downgrade -1)."
-	@echo "  create-module NAME=''   - Cria a estrutura inicial de um novo módulo (ex: make create-module NAME=FlowStep)"
+	@echo "  db-up                    - Sobe o container PostgreSQL local"
+	@echo "  db-down                  - Derruba o container PostgreSQL"
+	@echo "  db-create DB=nome        - Cria um banco com nome especificado"
+	@echo "  install                  - Instala as dependências via requirements.txt"
+	@echo "  requirements             - Atualiza o requirements.txt"
+	@echo "  migrate-new NAME=desc    - Cria nova migração com nome"
+	@echo "  migrate-up               - Aplica migrações no banco"
+	@echo "  migrate-down             - Desfaz última migração"
+	@echo "  create-module NAME=mod   - Cria estrutura de novo módulo"

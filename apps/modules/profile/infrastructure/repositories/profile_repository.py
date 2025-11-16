@@ -1,9 +1,12 @@
 from typing import List
+from uuid import UUID
+
 from sqlalchemy.orm import Session
+
 from apps.modules.profile.domain.entities.profile_entity import ProfileEntity
 from apps.modules.profile.domain.repositories.profile_repository_interface import ProfileRepositoryInterface
 from apps.modules.profile.infrastructure.models.profile_model import ProfileModel
-from uuid import UUID
+
 
 class ProfileRepository(ProfileRepositoryInterface):
     def __init__(self, session: Session):
@@ -24,13 +27,13 @@ class ProfileRepository(ProfileRepositoryInterface):
         return [row.to_entity() for row in results]
 
     def get_by_id(self, profile_id: UUID) -> ProfileEntity | None:
-        row = self.session.query(ProfileModel).filter_by(id=profile_id.bytes).first()
+        row = self.session.query(ProfileModel).filter_by(id=profile_id).first()
         if row:
             return row.to_entity()
         return None
 
     def update(self, profile: ProfileEntity) -> None:
-        db_profile = self.session.query(ProfileModel).filter_by(id=profile.id.bytes).first()
+        db_profile = self.session.query(ProfileModel).filter_by(id=profile.id).first()
         if not db_profile:
             return
 
@@ -41,5 +44,5 @@ class ProfileRepository(ProfileRepositoryInterface):
         self.session.commit()
 
     def delete(self, profile: ProfileEntity) -> None:
-        self.session.query(ProfileModel).filter_by(id=profile.id.bytes).delete()
+        self.session.query(ProfileModel).filter_by(id=profile.id).delete()
         self.session.commit()
