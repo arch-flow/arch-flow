@@ -3,11 +3,17 @@ import sys
 from pathlib import Path
 
 
-def to_snake_case(name):
-    return ''.join(['_' + c.lower() if c.isupper() else c for c in name]).lstrip('_')
+def to_snake_case(name: str) -> str:
+    result = ""
+    for c in name:
+        if c.isupper():
+            result += "_" + c.lower()
+        else:
+            result += c
+    return result.lstrip("_")
 
 
-def create_file(path, content=""):
+def create_file(path: Path, content: str = ""):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         f.write(content)
@@ -19,48 +25,48 @@ def main():
         sys.exit(1)
 
     raw_name = sys.argv[1]
-    name_snake = to_snake_case(raw_name)
-    base_path = Path("apps/modules") / name_snake
+    snake_name = to_snake_case(raw_name)
+    base_path = Path("apps/modules") / snake_name
 
     structure = {
         "application/dto": [
-            ("create_dto", f"class Create{raw_name}DTO:\n    pass\n"),
-            ("update_dto", f"class Update{raw_name}DTO:\n    pass\n"),
-            ("list_dto", f"class List{raw_name}DTO:\n    pass\n")
+            (f"create_{snake_name}_dto.py", f"class Create{raw_name}DTO:\n    pass\n"),
+            (f"list_{snake_name}_dto.py", f"class List{raw_name}DTO:\n    pass\n"),
+            (f"update_{snake_name}_dto.py", f"class Update{raw_name}DTO:\n    pass\n"),
+            (f"output_{snake_name}_dto.py", f"class {raw_name}OutputDTO:\n    pass\n"),
         ],
         "application/use_cases": [
-            ("create_use_case", f"class Create{raw_name}UseCase:\n    pass\n"),
-            ("update_use_case", f"class Update{raw_name}UseCase:\n    pass\n"),
-            ("get_use_case", f"class Get{raw_name}UseCase:\n    pass\n"),
-            ("delete_use_case", f"class Delete{raw_name}UseCase:\n    pass\n")
+            (f"create_{snake_name}_use_case.py", f"class Create{raw_name}UseCase:\n    pass\n"),
+            (f"list_{snake_name}_use_case.py", f"class List{raw_name}UseCase:\n    pass\n"),
+            (f"get_{snake_name}_use_case.py", f"class Get{raw_name}UseCase:\n    pass\n"),
+            (f"update_{snake_name}_use_case.py", f"class Update{raw_name}UseCase:\n    pass\n"),
+            (f"delete_{snake_name}_use_case.py", f"class Delete{raw_name}UseCase:\n    pass\n"),
         ],
         "domain/entities": [
-            ("entity", f"class {raw_name}Entity:\n    pass\n")
+            (f"{snake_name}_entity.py", f"class {raw_name}Entity:\n    pass\n"),
         ],
         "domain/repositories": [
-            ("repository_interface", f"class {raw_name}RepositoryInterface:\n    pass\n")
+            (f"{snake_name}_repository_interface.py", f"class {raw_name}RepositoryInterface:\n    pass\n"),
         ],
         "infrastructure/models": [
-            ("model", f"class {raw_name}Model:\n    pass\n")
+            (f"{snake_name}_model.py", f"class {raw_name}Model:\n    pass\n"),
         ],
         "infrastructure/repositories": [
-            ("repository", f"class {raw_name}Repository:\n    pass\n")
+            (f"{snake_name}_repository.py", f"class {raw_name}Repository:\n    pass\n"),
         ],
         "services": [
-            ("service_factory", f"class {raw_name}ServiceFactory:\n    pass\n")
-        ]
+            (f"{snake_name}_service_factory.py", f"class {raw_name}ServiceFactory:\n    pass\n"),
+        ],
     }
 
-    for subdir, files in structure.items():
-        for suffix, content in files:
-            file_path = base_path / subdir / f"{name_snake}_{suffix}.py"
-            create_file(file_path, content)
+    for folder, files in structure.items():
+        for filename, content in files:
+            create_file(base_path / folder / filename, content)
 
     for root, dirs, _ in os.walk(base_path):
         for d in dirs:
-            init_path = Path(root) / d / "__init__.py"
-            init_path.parent.mkdir(parents=True, exist_ok=True)
-            init_path.touch()
+            init_file = Path(root) / d / "__init__.py"
+            init_file.touch()
 
 
 if __name__ == "__main__":

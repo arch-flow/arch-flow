@@ -6,8 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 from apps.infrastructure.database.base import Base
 from apps.infrastructure.database.base import GUID
 from apps.modules.virtual_environment.domain.entities.virtual_environment_entity import VirtualEnvironmentEntity
-from apps.modules.virtual_environment.domain.enums.environment_manager import EnvironmentManager
-from apps.modules.virtual_environment.domain.enums.python_version import PythonVersion
+from apps.modules.virtual_environment.domain.enums.environment_manager_enum import EnvironmentManagerEnum
+from apps.modules.virtual_environment.domain.enums.python_version_enum import PythonVersionEnum
 
 
 class VirtualEnvironmentModel(Base):
@@ -15,7 +15,7 @@ class VirtualEnvironmentModel(Base):
 
     profile_id: Mapped[uuid.UUID] = mapped_column(
         GUID(),
-        ForeignKey("profiles.id"),
+        ForeignKey("profiles.id", ondelete="CASCADE"),
         nullable=False
     )
     name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
@@ -28,8 +28,8 @@ class VirtualEnvironmentModel(Base):
             id=self.id,
             profile_id=self.profile_id,
             name=self.name,
-            manager=EnvironmentManager(self.manager),
-            python_version=PythonVersion(self.python_version),
+            manager=EnvironmentManagerEnum(self.manager),
+            python_version=PythonVersionEnum(self.python_version),
             active=self.active,
             created_at=self.created_at,
             updated_at=self.updated_at,

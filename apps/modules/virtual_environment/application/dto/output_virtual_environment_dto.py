@@ -3,22 +3,22 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from apps.modules.virtual_environment.domain.enums.environment_manager import EnvironmentManager
-from apps.modules.virtual_environment.domain.enums.python_version import PythonVersion
+from apps.modules.virtual_environment.domain.enums.environment_manager_enum import EnvironmentManagerEnum
+from apps.modules.virtual_environment.domain.enums.python_version_enum import PythonVersionEnum
 
 
-class VirtualEnvironmentResponseDTO(BaseModel):
+class VirtualEnvironmentOutputDTO(BaseModel):
     id: UUID
     profile_id: UUID
     name: str
-    manager: EnvironmentManager
-    python_version: PythonVersion
+    manager: EnvironmentManagerEnum
+    python_version: PythonVersionEnum
     active: bool
     created_at: datetime
     updated_at: datetime
 
     @classmethod
-    def from_entity(cls, entity) -> "VirtualEnvironmentResponseDTO":
+    def from_entity(cls, entity) -> "VirtualEnvironmentOutputDTO":
         return cls(
             id=entity.id,
             profile_id=entity.profile_id,

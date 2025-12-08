@@ -1,18 +1,18 @@
-import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from uuid import UUID
 
-from apps.modules.virtual_environment.domain.enums.environment_manager import EnvironmentManager
-from apps.modules.virtual_environment.domain.enums.python_version import PythonVersion
+from apps.modules.virtual_environment.domain.enums.environment_manager_enum import EnvironmentManagerEnum
+from apps.modules.virtual_environment.domain.enums.python_version_enum import PythonVersionEnum
 
 
 @dataclass(frozen=True)
 class VirtualEnvironmentEntity:
-    id: uuid.UUID
-    profile_id: uuid.UUID
+    id: UUID
+    profile_id: UUID
     name: str
-    manager: EnvironmentManager
-    python_version: PythonVersion
+    manager: EnvironmentManagerEnum
+    python_version: PythonVersionEnum
     active: bool
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class EnvironmentManager(Enum):
+class DependencySourceEnum(Enum):
     VENV = "venv"
     PIPENV = "pipenv"
     POETRY = "poetry"

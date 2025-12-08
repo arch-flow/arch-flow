@@ -1,10 +1,8 @@
-from typing import Protocol, List
-from apps.modules.profile.domain.entities.profile_entity import ProfileEntity
-from uuid import UUID
+from typing import Protocol
 
-class ProfileRepositoryInterface(Protocol):
-    def create(self, profile: ProfileEntity) -> None: ...
-    def list_paginated(self, offset: int, limit: int) -> List[ProfileEntity]: ...
-    def get_by_id(self, profile_id: UUID) -> ProfileEntity | None: ...
-    def update(self, profile: ProfileEntity) -> None: ...
-    def delete(self, profile: ProfileEntity) -> None : ...
+from apps.modules.profile.domain.entities.profile_entity import ProfileEntity
+from apps.shared.interfaces.base_repository_interface import BaseRepositoryInterface
+
+
+class ProfileRepositoryInterface(BaseRepositoryInterface[ProfileEntity], Protocol):
+    pass

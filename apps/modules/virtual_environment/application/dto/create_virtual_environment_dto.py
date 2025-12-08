@@ -1,13 +1,13 @@
 from dataclasses import dataclass
-import uuid
+from uuid import UUID
 
-from apps.modules.virtual_environment.domain.enums.environment_manager import EnvironmentManager
-from apps.modules.virtual_environment.domain.enums.python_version import PythonVersion
+from apps.modules.virtual_environment.domain.enums.environment_manager_enum import EnvironmentManagerEnum
+from apps.modules.virtual_environment.domain.enums.python_version_enum import PythonVersionEnum
 
 
 @dataclass(frozen=True)
 class CreateVirtualEnvironmentDTO:
-    profile_id: uuid.UUID
+    profile_id: UUID
     name: str
-    manager: EnvironmentManager
-    python_version: PythonVersion
+    manager: EnvironmentManagerEnum
+    python_version: PythonVersionEnum
