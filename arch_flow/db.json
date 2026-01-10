@@ -1,9 +1,0 @@
-{
-  "functions": {
-    "-v":{
-      "steps": [
-        {"version": "None"}
-      ]
-    }
-  }
-}
